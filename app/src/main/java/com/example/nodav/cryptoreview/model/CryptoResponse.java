@@ -4,10 +4,14 @@ package com.example.nodav.cryptoreview.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class CryptoResponse {
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
+public class CryptoResponse extends RealmObject {
 
     @SerializedName("id")
     @Expose
+    @PrimaryKey
     private String id;
     @SerializedName("name")
     @Expose

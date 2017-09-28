@@ -12,11 +12,17 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private RestManager restManager;
+    private Realm realm;
+    private RealmResults<CryptoResponse> cryptoList;
 
 
     @Override
@@ -25,40 +31,48 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         restManager = new RestManager();
+        Realm.init(getApplicationContext());
+        realm = Realm.getDefaultInstance();
+        cryptoList = realm.where(CryptoResponse.class).findAll();
 
-        load();
+        if (cryptoList.size() == 0)
+            load();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        for (CryptoResponse crypto : cryptoList ) {
+            Log.v("REalm1", crypto.getName() + " " + crypto.getPriceUsd() );
+
+        }
+
+
     }
 
     private void load() {
 
-       /* Call<List<CryptoResponse>> call = restManager.getApiService().getCrypto();
-        call.enqueue(new Callback<List<CryptoResponse>>() {
-            @Override
-            public void onResponse(Call<List<CryptoResponse>> call, Response<List<CryptoResponse>> response) {
-
-                for (CryptoResponse crypto : response.body() ) {
-                    Log.v("RESPONSE1", crypto.getName());
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(Call<List<CryptoResponse>> call, Throwable t) {
-
-            }
-        });*/
-
-        Observable<List<CryptoResponse>> observable = restManager.getApiService().getCrypto();
+        Observable<List<CryptoResponse>> observable = restManager.getApiService().getCrypto(10);
         observable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(responseData ->{
 
                     for (CryptoResponse crypto : responseData ) {
-                        Log.v("RESPONSE1", crypto.getName());
+                        Log.v("RESPONSE1", crypto.getName() + " " + crypto.getPriceUsd() );
                     }
 
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realm.deleteAll();
+                            realm.insert(responseData);
+
+                        }
+                    });
+
+
                 });
+
     }
 
 }
