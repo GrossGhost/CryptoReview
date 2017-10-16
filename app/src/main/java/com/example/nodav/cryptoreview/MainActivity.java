@@ -1,28 +1,18 @@
 package com.example.nodav.cryptoreview;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
-import com.example.nodav.cryptoreview.model.CryptoResponse;
 import com.example.nodav.cryptoreview.network.RestManager;
-
-import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
-import io.realm.RealmList;
-import io.realm.RealmResults;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private RestManager restManager;
-    private Realm realm;
-    private RealmResults<CryptoResponse> cryptoList;
+    SwipeRefreshLayout swipeRefreshLayout ;
 
 
     @Override
@@ -30,48 +20,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        restManager = new RestManager();
-        Realm.init(getApplicationContext());
-        realm = Realm.getDefaultInstance();
-        cryptoList = realm.where(CryptoResponse.class).findAll();
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_crypto);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 
-        if (cryptoList.size() == 0)
-            load();
-    }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        for (CryptoResponse crypto : cryptoList ) {
-            Log.v("REalm1", crypto.getName() + " " + crypto.getPriceUsd() );
+            String response = RestManager.loadCrypto();
+            if (!response.equals(""))
+                Toast.makeText(getApplicationContext(),response, Toast.LENGTH_SHORT).show();
 
-        }
+            swipeRefreshLayout.setRefreshing(false);
 
+        });
 
-    }
-
-    private void load() {
-
-        Observable<List<CryptoResponse>> observable = restManager.getApiService().getCrypto(10);
-        observable.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(responseData ->{
-
-                    for (CryptoResponse crypto : responseData ) {
-                        Log.v("RESPONSE1", crypto.getName() + " " + crypto.getPriceUsd() );
-                    }
-
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            realm.deleteAll();
-                            realm.insert(responseData);
-
-                        }
-                    });
-
-
-                });
+        CryptoAdapter adapter = new CryptoAdapter(getApplicationContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
     }
 
