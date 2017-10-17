@@ -2,6 +2,7 @@ package com.example.nodav.cryptoreview.network;
 
 import android.support.annotation.NonNull;
 
+import com.example.nodav.cryptoreview.INetworkRequestHandler;
 import com.example.nodav.cryptoreview.model.CryptoResponse;
 
 import java.util.List;
@@ -51,8 +52,7 @@ public class RestManager {
     }
 
     @NonNull
-    public static String loadCrypto(){
-        String[] response = {""};
+    public static void loadCrypto(INetworkRequestHandler handler) {
         Observable<List<CryptoResponse>> observable = RestManager.getApiService().getCrypto(25);
         observable.subscribeOn(Schedulers.newThread())
 
@@ -61,9 +61,8 @@ public class RestManager {
                     realm.deleteAll();
                     realm.insert(responseData);
 
-                }), throwable ->
-                        response[0] = throwable.getMessage());
-
-        return response[0];
+                }), throwable -> {
+                    handler.onRequestError();
+                });
     }
 }
