@@ -1,4 +1,4 @@
-package com.example.nodav.cryptoreview;
+package com.example.nodav.cryptoreview.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.nodav.cryptoreview.R;
 import com.example.nodav.cryptoreview.model.CryptoResponse;
 
 import io.realm.Realm;
@@ -16,12 +17,12 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 
-class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.MyAdapter> implements RealmChangeListener {
+public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.MyAdapter> implements RealmChangeListener {
 
     private final RealmResults<CryptoResponse> data;
     private Context context;
 
-    CryptoAdapter(Context c){
+   public CryptoAdapter(Context c){
         context = c;
         Realm realm = Realm.getDefaultInstance();
         data = realm.where(CryptoResponse.class).findAll();
