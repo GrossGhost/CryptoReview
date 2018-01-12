@@ -2,24 +2,15 @@ package com.example.nodav.cryptoreview.network;
 
 import android.support.annotation.NonNull;
 
-import com.example.nodav.cryptoreview.INetworkRequestHandler;
-import com.example.nodav.cryptoreview.model.CryptoResponse;
-
-import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import retrofit2.Retrofit;
 
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.example.nodav.cryptoreview.Constants.BASE_URL;
 
 
 public class RestManager {
-
-    private static final String BASE_URL = "https://api.coinmarketcap.com/";
 
     private static ApiService apiService;
     private static Realm realm = Realm.getDefaultInstance();
@@ -46,23 +37,23 @@ public class RestManager {
             return new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    //.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build()
                     .create(ApiService.class);
     }
 
-    @NonNull
-    public static void loadCrypto(INetworkRequestHandler handler, int limit) {
-        Observable<List<CryptoResponse>> observable = RestManager.getApiService().getCrypto(limit);
-        observable.subscribeOn(Schedulers.newThread())
-
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(responseData -> realm.executeTransaction(realm -> {
-                    realm.deleteAll();
-                    realm.insert(responseData);
-
-                }), throwable -> {
-                    handler.onRequestError();
-                });
-    }
+//    @NonNull
+//    public static void loadCrypto(INetworkRequestHandler handler, int limit) {
+//        Observable<List<CryptoResponse>> observable = RestManager.getApiService().getCrypto(limit);
+//        observable.subscribeOn(Schedulers.newThread())
+//
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(responseData -> realm.executeTransaction(realm -> {
+//                    realm.deleteAll();
+//                    realm.insert(responseData);
+//
+//                }), throwable -> {
+//                    handler.onRequestError();
+//                });
+//    }
 }

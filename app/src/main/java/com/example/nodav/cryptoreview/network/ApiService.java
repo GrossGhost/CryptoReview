@@ -12,4 +12,5 @@ import retrofit2.http.Query;
 public interface ApiService {
     @GET("v1/ticker")
     Observable<List<CryptoResponse>> getCrypto(@Query("limit") Integer limit);
+
 }

@@ -12,43 +12,43 @@ import android.widget.Toast;
 import com.example.nodav.cryptoreview.R;
 import com.example.nodav.cryptoreview.model.CryptoResponse;
 
-import io.realm.Realm;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 
-public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.MyAdapter> implements RealmChangeListener {
+public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder> implements RealmChangeListener {
 
-    private final RealmResults<CryptoResponse> data;
+    private RealmResults<CryptoResponse> data;
     private Context context;
 
-   public CryptoAdapter(Context c){
+    public CryptoAdapter(Context c, RealmResults<CryptoResponse> data) {
         context = c;
-        Realm realm = Realm.getDefaultInstance();
-        data = realm.where(CryptoResponse.class).findAll();
+        this.data = data;
+
         data.addChangeListener(this);
-        notifyDataSetChanged();
     }
 
     @Override
-    public CryptoAdapter.MyAdapter onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
-        return new MyAdapter(view);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(CryptoAdapter.MyAdapter holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         holder.name.setText(data.get(position).getName());
         holder.price.setText(context.getString(R.string.dollar_price, data.get(position).getPriceUsd()));
 
         holder.changeOneH.setText(data.get(position).getPercentChange1h() + "%");
-        if ( Double.parseDouble(data.get(position).getPercentChange1h()) < 0)
+        if (Double.parseDouble(data.get(position).getPercentChange1h()) < 0)
             holder.changeOneH.setTextColor(Color.RED);
         else
             holder.changeOneH.setTextColor(Color.GREEN);
 
         holder.change24H.setText(data.get(position).getPercentChange24h() + "%");
-        if ( Double.parseDouble(data.get(position).getPercentChange24h()) < 0)
+        if (Double.parseDouble(data.get(position).getPercentChange24h()) < 0)
             holder.change24H.setTextColor(Color.RED);
         else
             holder.change24H.setTextColor(Color.GREEN);
@@ -65,19 +65,20 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.MyAdapter>
         Toast.makeText(context, "Data Updated", Toast.LENGTH_SHORT).show();
     }
 
-    class MyAdapter extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.tv_name_coin)
         TextView name;
+        @BindView(R.id.tv_price)
         TextView price;
+        @BindView(R.id.tv_percent_change_1h)
         TextView changeOneH;
+        @BindView(R.id.tv_percent_change_24h)
         TextView change24H;
 
-        MyAdapter(final View view) {
+        ViewHolder(View view) {
             super(view);
-            name = view.findViewById(R.id.tv_name_coin);
-            price = view.findViewById(R.id.tv_price);
-            changeOneH = view.findViewById(R.id.tv_percent_change_1h);
-            change24H = view.findViewById(R.id.tv_percent_change_24h);
+            ButterKnife.bind(this, view);
         }
     }
 }
