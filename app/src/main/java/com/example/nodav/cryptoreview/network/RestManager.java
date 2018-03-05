@@ -44,7 +44,7 @@ public class RestManager {
 
 //    @NonNull
 //    public static void loadCrypto(INetworkRequestHandler handler, int limit) {
-//        Observable<List<CryptoResponse>> observable = RestManager.getApiService().getCrypto(limit);
+//        Observable<List<CryptoResponse>> observable = RestManager.getApiService().getCryptos(limit);
 //        observable.subscribeOn(Schedulers.newThread())
 //
 //                .observeOn(AndroidSchedulers.mainThread())

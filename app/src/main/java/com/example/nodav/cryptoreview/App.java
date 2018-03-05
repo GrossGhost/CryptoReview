@@ -2,9 +2,6 @@ package com.example.nodav.cryptoreview;
 
 import android.app.Application;
 
-import android.content.Context;
-import android.widget.Toast;
-
 
 import com.example.nodav.cryptoreview.dagger.component.AppComponent;
 import com.example.nodav.cryptoreview.dagger.component.DaggerAppComponent;
@@ -22,10 +19,13 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Retrofit;
 
 
 public class App extends Application {
+
+    private static App instance = null;
 
     @Inject
     Retrofit retrofit;
@@ -37,7 +37,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        instance = this;
         appComponent = DaggerAppComponent.builder()
                 .netModule(new NetModule())
                 .realmModule(new RealmModule(this))
@@ -45,43 +45,35 @@ public class App extends Application {
 
         appComponent.inject(this);
 
-        //getCryptoTitles();
-        getCrypto(25);
+        RealmResults<CryptoResponse> usersCryptos = realm.where(CryptoResponse.class).findAll();
+        if ( usersCryptos.size() > 0){
+            getUsersCrypto(usersCryptos);
+        }
 
     }
 
-//    private void getCryptoTitles() {
-//        Observable<List<CryptoResponse>> observable = retrofit.create(ApiService.class).getCrypto(0);
-//        observable.subscribeOn(Schedulers.newThread())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(responseData -> {
-//
-//                    for (CryptoResponse item : responseData){
-//                        Log.d("SSS",item.getId());
-//                        Log.d("SSS",item.getName());
-//                    }
-//                });
-//    }
+    public void getUsersCrypto(RealmResults<CryptoResponse> cryptos){
 
-    private void getCrypto(int limit) {
-        Observable<List<CryptoResponse>> observable = retrofit.create(ApiService.class).getCrypto(limit);
-        observable.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(responseData -> realm.executeTransaction(realm -> {
-                    realm.deleteAll();
-                    realm.insert(responseData);
-                }), throwable -> {
-                    Toast.makeText(getApplicationContext(),"updating data error", Toast.LENGTH_SHORT).show();
-                });
+        for (CryptoResponse crypto : cryptos) {
+            Observable<List<CryptoResponse>> observable = retrofit.create(ApiService.class).getCrypto(crypto.getId());
+            observable.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(responseData ->
+                                    realm.executeTransaction(realm ->
+
+                                            realm.copyToRealmOrUpdate(responseData.get(0))
+
+                                    ),
+                            throwable -> {
+                    });
+        }
+
     }
+
+    public static App getInstance() { return  instance; }
 
     public AppComponent getAppComponent() {
         return appComponent;
-    }
-
-
-    public static App get(Context context) {
-        return (App) context.getApplicationContext();
     }
 
 }

@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ((App) getApplication()).getAppComponent().inject(this);
+        App.getInstance().getAppComponent().inject(this);
         ButterKnife.bind(this);
 
         initViews();
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            getPopularCrypto();
+            App.getInstance().getUsersCrypto(realm.where(CryptoResponse.class).findAll());
             swipeRefreshLayout.setRefreshing(false);
         });
 
@@ -85,17 +85,4 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
     }
-
-    private void getPopularCrypto() {
-        Observable<List<CryptoResponse>> call = retrofit.create(ApiService.class).getCrypto(25);
-        call.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(responseData -> realm.executeTransaction(realm -> {
-                    realm.deleteAll();
-                    realm.insert(responseData);
-                }), throwable -> {
-                    Toast.makeText(this,"updating data error", Toast.LENGTH_SHORT).show();
-                });
-    }
-
 }

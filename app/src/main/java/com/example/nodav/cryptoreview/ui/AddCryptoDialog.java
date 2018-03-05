@@ -3,15 +3,15 @@ package com.example.nodav.cryptoreview.ui;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.View;
-import android.widget.Button;
-import android.widget.SearchView;
 
-import com.example.nodav.cryptoreview.App;
 import com.example.nodav.cryptoreview.R;
+import com.example.nodav.cryptoreview.adapters.CryptoTitleAdapter;
 
-import javax.inject.Inject;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,23 +19,42 @@ import io.realm.Realm;
 
 public class AddCryptoDialog extends Dialog {
 
-    @Inject
-    Realm realm;
-
-    @BindView(R.id.search_view)
+    @BindView(R.id.searchView)
     SearchView searchView;
-    @BindView(R.id.button_dialog_ok)
-    Button buttonOk;
     @BindView(R.id.recycler_view_dialog)
     RecyclerView recyclerView;
 
-    public AddCryptoDialog(@NonNull Context context) {
+    private List<String> data;
+    private CryptoTitleAdapter adapter;
+    private Realm realm;
+
+
+    public AddCryptoDialog(@NonNull Context context, List<String> titles, Realm realm) {
         super(context);
+
+        this.data = titles;
+        this.realm = realm;
 
         View view = View.inflate(getContext(), R.layout.dialog_crypto_list, null);
         setContentView(view);
         ButterKnife.bind(this, view);
 
-        //((App) getOwnerActivity().getApplication()).getAppComponent().inject(this);
+        adapter = new CryptoTitleAdapter(data, realm);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.filter(newText);
+                return true;
+            }
+        });
+
     }
 }
