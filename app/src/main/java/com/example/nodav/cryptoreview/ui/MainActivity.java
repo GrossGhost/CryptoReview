@@ -9,23 +9,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.nodav.cryptoreview.App;
 import com.example.nodav.cryptoreview.adapters.CryptoAdapter;
 import com.example.nodav.cryptoreview.R;
 import com.example.nodav.cryptoreview.model.CryptoResponse;
-import com.example.nodav.cryptoreview.network.ApiService;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import retrofit2.Retrofit;
 
@@ -38,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     Realm realm;
 
     @BindView(R.id.swipe_container)
-    SwipeRefreshLayout swipeRefreshLayout ;
+    SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.recycler_view_crypto)
     RecyclerView recyclerView;
 
@@ -62,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_item_users_list:
                 showUsersListActivity();
                 return true;

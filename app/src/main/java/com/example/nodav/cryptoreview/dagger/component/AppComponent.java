@@ -10,9 +10,6 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 
-/**
- * Created by Vladyslav Noda on 11.01.2018.
- */
 
 @Singleton
 @Component(modules = { NetModule.class, RealmModule.class})

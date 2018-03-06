@@ -46,13 +46,13 @@ public class App extends Application {
         appComponent.inject(this);
 
         RealmResults<CryptoResponse> usersCryptos = realm.where(CryptoResponse.class).findAll();
-        if ( usersCryptos.size() > 0){
+        if (usersCryptos.size() > 0) {
             getUsersCrypto(usersCryptos);
         }
 
     }
 
-    public void getUsersCrypto(RealmResults<CryptoResponse> cryptos){
+    public void getUsersCrypto(RealmResults<CryptoResponse> cryptos) {
 
         for (CryptoResponse crypto : cryptos) {
             Observable<List<CryptoResponse>> observable = retrofit.create(ApiService.class).getCrypto(crypto.getId());
@@ -60,17 +60,15 @@ public class App extends Application {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(responseData ->
                                     realm.executeTransaction(realm ->
-
                                             realm.copyToRealmOrUpdate(responseData.get(0))
-
                                     ),
-                            throwable -> {
-                    });
+                            throwable -> {});
         }
-
     }
 
-    public static App getInstance() { return  instance; }
+    public static App getInstance() {
+        return instance;
+    }
 
     public AppComponent getAppComponent() {
         return appComponent;

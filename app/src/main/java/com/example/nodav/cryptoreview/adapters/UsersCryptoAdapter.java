@@ -11,7 +11,7 @@ import com.example.nodav.cryptoreview.model.CryptoResponse;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import butterknife.OnLongClick;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -21,7 +21,7 @@ public class UsersCryptoAdapter extends RecyclerView.Adapter<UsersCryptoAdapter.
     private RealmResults<CryptoResponse> data;
     private Realm realm;
 
-    public UsersCryptoAdapter(RealmResults<CryptoResponse> data, Realm realm){
+    public UsersCryptoAdapter(RealmResults<CryptoResponse> data, Realm realm) {
         this.data = data;
         this.realm = realm;
         data.addChangeListener(this);
@@ -48,21 +48,23 @@ public class UsersCryptoAdapter extends RecyclerView.Adapter<UsersCryptoAdapter.
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.title_text_view)
         TextView title;
-        public ViewHolder(View itemView) {
+
+        ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
-        @OnClick(R.id.title_text_view)
-        public void delete(TextView view) {
+        @OnLongClick(R.id.title_text_view)
+        boolean delete(TextView view) {
 
             realm.beginTransaction();
-            realm.where(CryptoResponse.class).equalTo("id", view.getText()+"").findFirst().deleteFromRealm();
+            realm.where(CryptoResponse.class).equalTo("id", view.getText() + "").findFirst().deleteFromRealm();
             realm.commitTransaction();
 
+            return true;
         }
 
     }

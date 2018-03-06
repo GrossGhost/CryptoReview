@@ -17,29 +17,24 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
-public class AddCryptoDialog extends Dialog {
+class AddCryptoDialog extends Dialog {
 
     @BindView(R.id.searchView)
     SearchView searchView;
     @BindView(R.id.recycler_view_dialog)
     RecyclerView recyclerView;
 
-    private List<String> data;
     private CryptoTitleAdapter adapter;
-    private Realm realm;
 
 
-    public AddCryptoDialog(@NonNull Context context, List<String> titles, Realm realm) {
+    AddCryptoDialog(@NonNull Context context, List<String> titles, Realm realm) {
         super(context);
-
-        this.data = titles;
-        this.realm = realm;
 
         View view = View.inflate(getContext(), R.layout.dialog_crypto_list, null);
         setContentView(view);
         ButterKnife.bind(this, view);
 
-        adapter = new CryptoTitleAdapter(data, realm);
+        adapter = new CryptoTitleAdapter(titles, realm);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
@@ -55,6 +50,5 @@ public class AddCryptoDialog extends Dialog {
                 return true;
             }
         });
-
     }
 }

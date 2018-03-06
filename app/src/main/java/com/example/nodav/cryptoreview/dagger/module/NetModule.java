@@ -14,9 +14,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.nodav.cryptoreview.Constants.BASE_URL;
 
-/**
- * Created by Vladyslav Noda on 11.01.2018.
- */
 
 @Module
 public class NetModule {

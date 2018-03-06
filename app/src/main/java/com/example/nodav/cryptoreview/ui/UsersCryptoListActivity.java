@@ -71,7 +71,7 @@ public class UsersCryptoListActivity extends AppCompatActivity {
 
     private List<String> getCryptoTitles() {
         List<String> titles = new ArrayList<>();
-        Observable<List<CryptoResponse>> observable = retrofit.create(ApiService.class).getCryptos(0);
+        Observable<List<CryptoResponse>> observable = retrofit.create(ApiService.class).getCryptos();
         observable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(responseData -> {
@@ -82,5 +82,4 @@ public class UsersCryptoListActivity extends AppCompatActivity {
                 });
         return titles;
     }
-
 }

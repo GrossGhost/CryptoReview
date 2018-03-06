@@ -12,7 +12,7 @@ import io.realm.Realm;
 @Module
 public class RealmModule {
 
-    public RealmModule(Context context){
+    public RealmModule(Context context) {
         Realm.init(context);
     }
 

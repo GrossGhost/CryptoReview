@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.nodav.cryptoreview.R;
 import com.example.nodav.cryptoreview.model.CryptoResponse;
@@ -42,7 +41,7 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
         holder.price.setText(context.getString(R.string.dollar_price, item.getPriceUsd()));
 
         holder.changeOneH.setText(item.getPercentChange1h() + "%");
-        if (data.get(position).getPercentChange1h() != null){
+        if (data.get(position).getPercentChange1h() != null) {
             if (Double.parseDouble(item.getPercentChange1h()) < 0)
                 holder.changeOneH.setTextColor(Color.RED);
             else
@@ -67,7 +66,6 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
     @Override
     public void onChange(Object o) {
         notifyDataSetChanged();
-        //Toast.makeText(context, "Data Updated", Toast.LENGTH_SHORT).show();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

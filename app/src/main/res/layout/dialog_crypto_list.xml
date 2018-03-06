@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:minWidth="260dp"
+    android:orientation="vertical">
 
     <android.support.v7.widget.SearchView
-    android:id="@+id/searchView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    />
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" >
+        android:layout_weight="1">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_dialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
     </ScrollView>
-
 </LinearLayout>
