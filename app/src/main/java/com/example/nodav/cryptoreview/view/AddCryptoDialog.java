@@ -1,4 +1,4 @@
-package com.example.nodav.cryptoreview.ui;
+package com.example.nodav.cryptoreview.view;
 
 import android.app.Dialog;
 import android.content.Context;

@@ -47,7 +47,7 @@ public class CryptoTitleAdapter extends RecyclerView.Adapter<CryptoTitleAdapter.
         } else {
             text = text.toLowerCase();
             for (String item : titlesCopy){
-                if(item.toLowerCase().contains(text)){
+                if(item.toLowerCase().startsWith(text)){
                     titles.add(item);
                 }
             }

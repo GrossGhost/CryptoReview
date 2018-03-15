@@ -2,6 +2,7 @@ package com.example.nodav.cryptoreview.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,19 +14,22 @@ import com.example.nodav.cryptoreview.model.CryptoResponse;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnLongClick;
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 
-public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder> implements RealmChangeListener {
+public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder> {
 
     private RealmResults<CryptoResponse> data;
     private Context context;
+    private Realm realm;
 
-    public CryptoAdapter(Context c, RealmResults<CryptoResponse> data) {
+    public CryptoAdapter(Context c, Realm realm) {
         context = c;
-        this.data = data;
-        data.addChangeListener(this);
+        this.realm = realm;
+
     }
 
     @Override
@@ -63,13 +67,15 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
         return data.size();
     }
 
-    @Override
-    public void onChange(Object o) {
-        notifyDataSetChanged();
+    public void setData(RealmResults<CryptoResponse> data){
+        this.data = null;
+        this.data = data;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.card_view)
+        CardView cardView;
         @BindView(R.id.tv_name_coin)
         TextView name;
         @BindView(R.id.tv_price)
@@ -82,6 +88,16 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+        }
+
+        @OnLongClick(R.id.card_view)
+        boolean delete() {
+
+            realm.beginTransaction();
+            realm.where(CryptoResponse.class).equalTo("id", name.getText() + "").findFirst().deleteFromRealm();
+            realm.commitTransaction();
+
+            return true;
         }
     }
 }

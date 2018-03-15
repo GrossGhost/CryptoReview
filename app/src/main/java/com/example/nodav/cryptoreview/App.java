@@ -4,13 +4,16 @@ import android.app.Application;
 
 
 import com.example.nodav.cryptoreview.dagger.component.AppComponent;
+
 import com.example.nodav.cryptoreview.dagger.component.DaggerAppComponent;
 import com.example.nodav.cryptoreview.dagger.module.NetModule;
+import com.example.nodav.cryptoreview.dagger.module.PresenterModule;
 import com.example.nodav.cryptoreview.dagger.module.RealmModule;
 import com.example.nodav.cryptoreview.model.CryptoResponse;
 import com.example.nodav.cryptoreview.network.ApiService;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -33,6 +36,7 @@ public class App extends Application {
     Realm realm;
 
     private AppComponent appComponent;
+    private List<String> titles = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -41,18 +45,45 @@ public class App extends Application {
         appComponent = DaggerAppComponent.builder()
                 .netModule(new NetModule())
                 .realmModule(new RealmModule(this))
+                .presenterModule(new PresenterModule())
                 .build();
 
         appComponent.inject(this);
 
         RealmResults<CryptoResponse> usersCryptos = realm.where(CryptoResponse.class).findAll();
         if (usersCryptos.size() > 0) {
-            getUsersCrypto(usersCryptos);
+            updateUsersCrypto(usersCryptos);
         }
+        getCryptoTitles();
 
     }
 
-    public void getUsersCrypto(RealmResults<CryptoResponse> cryptos) {
+    public static App getInstance() {
+        return instance;
+    }
+
+    public AppComponent getAppComponent() {
+        return appComponent;
+    }
+
+    public List<String> getTitles() {
+        return titles;
+    }
+
+    private void getCryptoTitles() {
+
+        Observable<List<CryptoResponse>> observable = retrofit.create(ApiService.class).getCryptos();
+        observable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(responseData -> {
+
+                    for (CryptoResponse item : responseData) {
+                        titles.add(item.getId());
+                    }
+                }, throwable -> {});
+
+    }
+    public void updateUsersCrypto(RealmResults<CryptoResponse> cryptos) {
 
         for (CryptoResponse crypto : cryptos) {
             Observable<List<CryptoResponse>> observable = retrofit.create(ApiService.class).getCrypto(crypto.getId());
@@ -65,13 +96,4 @@ public class App extends Application {
                             throwable -> {});
         }
     }
-
-    public static App getInstance() {
-        return instance;
-    }
-
-    public AppComponent getAppComponent() {
-        return appComponent;
-    }
-
 }
