@@ -1,7 +1,6 @@
 package com.example.nodav.cryptoreview.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,12 +10,11 @@ import android.widget.TextView;
 
 import com.example.nodav.cryptoreview.R;
 import com.example.nodav.cryptoreview.model.CryptoResponse;
+import com.example.nodav.cryptoreview.presenter.MainActivityPresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnLongClick;
-import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 
@@ -24,11 +22,11 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
 
     private RealmResults<CryptoResponse> data;
     private Context context;
-    private Realm realm;
+    private MainActivityPresenter presenter;
 
-    public CryptoAdapter(Context c, Realm realm) {
+    public CryptoAdapter(Context c, MainActivityPresenter presenter) {
         context = c;
-        this.realm = realm;
+        this.presenter = presenter;
 
     }
 
@@ -47,18 +45,18 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
         holder.changeOneH.setText(item.getPercentChange1h() + "%");
         if (data.get(position).getPercentChange1h() != null) {
             if (Double.parseDouble(item.getPercentChange1h()) < 0)
-                holder.changeOneH.setTextColor(Color.RED);
+                holder.changeOneH.setTextColor(context.getResources().getColor(R.color.colorRed));
             else
-                holder.changeOneH.setTextColor(Color.GREEN);
+                holder.changeOneH.setTextColor(context.getResources().getColor(R.color.colorGreen));
         }
 
 
         holder.change24H.setText(item.getPercentChange24h() + "%");
         if (item.getPercentChange24h() != null) {
             if (Double.parseDouble(item.getPercentChange24h()) < 0)
-                holder.change24H.setTextColor(Color.RED);
+                holder.change24H.setTextColor(context.getResources().getColor(R.color.colorRed));
             else
-                holder.change24H.setTextColor(Color.GREEN);
+                holder.change24H.setTextColor(context.getResources().getColor(R.color.colorGreen));
         }
     }
 
@@ -92,11 +90,7 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
 
         @OnLongClick(R.id.card_view)
         boolean delete() {
-
-            realm.beginTransaction();
-            realm.where(CryptoResponse.class).equalTo("id", name.getText() + "").findFirst().deleteFromRealm();
-            realm.commitTransaction();
-
+            presenter.onCryptoDelete(name.getText()+"");
             return true;
         }
     }

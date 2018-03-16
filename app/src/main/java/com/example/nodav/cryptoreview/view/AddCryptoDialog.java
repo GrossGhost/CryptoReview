@@ -24,17 +24,14 @@ class AddCryptoDialog extends Dialog {
     @BindView(R.id.recycler_view_dialog)
     RecyclerView recyclerView;
 
-    private CryptoTitleAdapter adapter;
 
-
-    AddCryptoDialog(@NonNull Context context, List<String> titles, Realm realm) {
+    AddCryptoDialog(@NonNull Context context, CryptoTitleAdapter adapter) {
         super(context);
 
         View view = View.inflate(getContext(), R.layout.dialog_crypto_list, null);
         setContentView(view);
         ButterKnife.bind(this, view);
 
-        adapter = new CryptoTitleAdapter(titles, realm);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 

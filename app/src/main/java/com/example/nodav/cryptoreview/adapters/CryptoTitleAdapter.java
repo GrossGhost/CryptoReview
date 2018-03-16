@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.nodav.cryptoreview.R;
 import com.example.nodav.cryptoreview.model.CryptoResponse;
+import com.example.nodav.cryptoreview.presenter.MainActivityPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,31 +25,28 @@ import io.realm.RealmResults;
 
 public class CryptoTitleAdapter extends RecyclerView.Adapter<CryptoTitleAdapter.ViewHolder> {
 
-    private List<String> titles;
-    private List<String> titlesCopy = new ArrayList<>();
-    private List<String> titlesUser = new ArrayList<>();
-    private Realm realm;
+    private List<String> titlesAll;
+    private List<String> titlesAllCopy = new ArrayList<>();
+    private List<String> titlesUser;
+    private MainActivityPresenter presenter;
 
-    public  CryptoTitleAdapter(List<String> titles, Realm realm){
-        this.titles = titles;
-        this.titlesCopy.addAll(titles);
-        this.realm = realm;
+    public  CryptoTitleAdapter(List<String> titlesAll, MainActivityPresenter presenter){
+        this.titlesAll = titlesAll;
+        this.titlesAllCopy.addAll(this.titlesAll);
+        this.titlesUser = presenter.getUsersCryptoList();
+        this.presenter = presenter;
 
-        RealmResults<CryptoResponse> usersCrypto = realm.where(CryptoResponse.class).findAll();
-        for (CryptoResponse response : usersCrypto){
-            titlesUser.add(response.getId());
-        }
     }
 
     public void filter(String text){
-        titles.clear();
+        titlesAll.clear();
         if (text.isEmpty()){
-            titles.addAll(titlesCopy);
+            titlesAll.addAll(titlesAllCopy);
         } else {
             text = text.toLowerCase();
-            for (String item : titlesCopy){
+            for (String item : titlesAllCopy){
                 if(item.toLowerCase().startsWith(text)){
-                    titles.add(item);
+                    titlesAll.add(item);
                 }
             }
         }
@@ -63,7 +61,7 @@ public class CryptoTitleAdapter extends RecyclerView.Adapter<CryptoTitleAdapter.
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final String title = titles.get(position);
+        final String title = titlesAll.get(position);
         holder.title.setText(title);
 
         holder.checkBox.setOnCheckedChangeListener(null);
@@ -83,7 +81,7 @@ public class CryptoTitleAdapter extends RecyclerView.Adapter<CryptoTitleAdapter.
 
     @Override
     public int getItemCount() {
-        return titles.size();
+        return titlesAll.size();
     }
 
 
@@ -104,12 +102,12 @@ public class CryptoTitleAdapter extends RecyclerView.Adapter<CryptoTitleAdapter.
 
         @OnClick(R.id.card_view)
         void submit() {
-            CryptoResponse crypto = new CryptoResponse();
-            crypto.setId(title.getText()+"");
 
-            realm.beginTransaction();
-            realm.insert(crypto);
-            realm.commitTransaction();
+
+            presenter.onCryptoAdd(title.getText()+"");
+//            realm.beginTransaction();
+//            realm.insert(crypto);
+//            realm.commitTransaction();
 
             checkBox.setChecked(true);
             cardView.setClickable(false);

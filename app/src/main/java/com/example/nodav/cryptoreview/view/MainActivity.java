@@ -10,8 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import com.example.nodav.cryptoreview.App;
 import com.example.nodav.cryptoreview.adapters.CryptoAdapter;
 import com.example.nodav.cryptoreview.R;
+import com.example.nodav.cryptoreview.adapters.CryptoTitleAdapter;
 import com.example.nodav.cryptoreview.model.CryptoResponse;
-import com.example.nodav.cryptoreview.presenter.Presenter;
+import com.example.nodav.cryptoreview.presenter.MainActivityPresenter;
 
 import javax.inject.Inject;
 
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     Realm realm;
     @Inject
-    Presenter presenter;
+    MainActivityPresenter presenter;
 
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -59,12 +60,11 @@ public class MainActivity extends AppCompatActivity {
             swipeRefreshLayout.setRefreshing(false);
         });
 
-        adapter = new CryptoAdapter(this, realm);
+        adapter = new CryptoAdapter(this, presenter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        presenter = new Presenter(realm);
         presenter.attachView(this);
         presenter.viewIsReady();
     }
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.fab)
     public void onFABClick() {
 
-        AddCryptoDialog dialog = new AddCryptoDialog(this, App.getInstance().getTitles(), realm);
+        AddCryptoDialog dialog = new AddCryptoDialog(this, new CryptoTitleAdapter(App.getInstance().getTitles(), presenter));
         dialog.show();
     }
 

@@ -96,4 +96,17 @@ public class App extends Application {
                             throwable -> {});
         }
     }
+
+    public void updateUsersCrypto(String cryptoId) {
+
+            Observable<List<CryptoResponse>> observable = retrofit.create(ApiService.class).getCrypto(cryptoId);
+            observable.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(responseData ->
+                                    realm.executeTransaction(realm ->
+                                            realm.copyToRealmOrUpdate(responseData.get(0))
+                                    ),
+                            throwable -> {});
+
+    }
 }

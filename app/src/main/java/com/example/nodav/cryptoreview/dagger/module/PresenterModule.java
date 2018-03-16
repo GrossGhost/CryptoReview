@@ -1,6 +1,6 @@
 package com.example.nodav.cryptoreview.dagger.module;
 
-import com.example.nodav.cryptoreview.presenter.Presenter;
+import com.example.nodav.cryptoreview.presenter.MainActivityPresenter;
 
 import javax.inject.Singleton;
 
@@ -15,7 +15,7 @@ public class PresenterModule {
 
     @Provides
     @Singleton
-    Presenter providePresenter(Realm realm){
-        return new Presenter(realm);
+    MainActivityPresenter providePresenter(Realm realm){
+        return new MainActivityPresenter(realm);
     }
 }
