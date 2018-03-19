@@ -1,5 +1,7 @@
 package com.example.nodav.cryptoreview.presenter;
 
+import android.widget.Toast;
+
 import com.example.nodav.cryptoreview.App;
 import com.example.nodav.cryptoreview.model.CryptoResponse;
 import com.example.nodav.cryptoreview.view.MainActivity;
@@ -36,7 +38,7 @@ public class MainActivityPresenter implements RealmChangeListener {
 
     @Override
     public void onChange(Object o) {
-        view.updateCrypto();
+        view.getCryptoAdapter().notifyDataSetChanged();
     }
 
     public void onRefreshData(){
@@ -66,5 +68,21 @@ public class MainActivityPresenter implements RealmChangeListener {
             list.add(crypto.getId());
         }
         return list;
+    }
+
+    public void onRequestStart(){
+        if (view != null)
+            view.showProgressbar();
+    }
+
+    public void onErrorResponse(){
+        if (view != null) {
+            view.hideProgressbar();
+            Toast.makeText(view, "Error", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void onResponse(){
+        view.hideProgressbar();
+        Toast.makeText(view, "Update", Toast.LENGTH_SHORT).show();
     }
 }

@@ -76,7 +76,6 @@ public class CryptoTitleAdapter extends RecyclerView.Adapter<CryptoTitleAdapter.
             holder.cardView.setClickable(true);
             holder.cardView.setCardBackgroundColor(Color.WHITE);
         }
-
     }
 
     @Override
@@ -103,11 +102,7 @@ public class CryptoTitleAdapter extends RecyclerView.Adapter<CryptoTitleAdapter.
         @OnClick(R.id.card_view)
         void submit() {
 
-
             presenter.onCryptoAdd(title.getText()+"");
-//            realm.beginTransaction();
-//            realm.insert(crypto);
-//            realm.commitTransaction();
 
             checkBox.setChecked(true);
             cardView.setClickable(false);

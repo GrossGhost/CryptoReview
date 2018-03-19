@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.nodav.cryptoreview.App;
 import com.example.nodav.cryptoreview.adapters.CryptoAdapter;
@@ -21,13 +23,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import retrofit2.Retrofit;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    @Inject
-    Retrofit retrofit;
     @Inject
     Realm realm;
     @Inject
@@ -39,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     @BindView(R.id.fab)
     FloatingActionButton fab;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
 
     private CryptoAdapter adapter;
 
@@ -79,8 +80,15 @@ public class MainActivity extends AppCompatActivity {
     public void showCrypto(RealmResults<CryptoResponse> data) {
         adapter.setData(data);
     }
-    public void updateCrypto(){
-        adapter.notifyDataSetChanged();
+    public CryptoAdapter getCryptoAdapter(){
+        return adapter;
+    }
+
+    public void showProgressbar(){
+        progressBar.setVisibility(View.VISIBLE);
+    }
+    public void hideProgressbar(){
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
