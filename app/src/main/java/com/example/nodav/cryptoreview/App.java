@@ -104,7 +104,6 @@ public class App extends Application {
                             throwable -> {if (pos == cryptos.size()){ presenter.onErrorResponse();
                             }});
         }
-
     }
 
     public void updateUsersCrypto(String cryptoId) {
