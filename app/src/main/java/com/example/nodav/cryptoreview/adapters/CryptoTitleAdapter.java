@@ -10,7 +10,6 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.nodav.cryptoreview.R;
-import com.example.nodav.cryptoreview.model.CryptoResponse;
 import com.example.nodav.cryptoreview.presenter.MainActivityPresenter;
 
 import java.util.ArrayList;
@@ -19,8 +18,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 
 public class CryptoTitleAdapter extends RecyclerView.Adapter<CryptoTitleAdapter.ViewHolder> {
@@ -102,7 +99,7 @@ public class CryptoTitleAdapter extends RecyclerView.Adapter<CryptoTitleAdapter.
         @OnClick(R.id.card_view)
         void submit() {
 
-            presenter.onCryptoAdd(title.getText()+"");
+            presenter.onCryptoAdd(title.getText()+"", titlesUser.size());
 
             checkBox.setChecked(true);
             cardView.setClickable(false);

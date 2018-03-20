@@ -11,11 +11,10 @@ import android.view.View;
 import com.example.nodav.cryptoreview.R;
 import com.example.nodav.cryptoreview.adapters.CryptoTitleAdapter;
 
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
+
 
 class AddCryptoDialog extends Dialog {
 

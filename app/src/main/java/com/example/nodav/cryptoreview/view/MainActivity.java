@@ -16,21 +16,21 @@ import com.example.nodav.cryptoreview.adapters.CryptoTitleAdapter;
 import com.example.nodav.cryptoreview.model.CryptoResponse;
 import com.example.nodav.cryptoreview.presenter.MainActivityPresenter;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
 import io.realm.RealmResults;
 
 
 public class MainActivity extends AppCompatActivity {
 
     @Inject
-    Realm realm;
-    @Inject
     MainActivityPresenter presenter;
+
 
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -68,18 +68,26 @@ public class MainActivity extends AppCompatActivity {
 
         presenter.attachView(this);
         presenter.viewIsReady();
+
     }
 
     @OnClick(R.id.fab)
     public void onFABClick() {
+        if (App.getInstance().getTitles().size() == 0)
+            presenter.getCryptoTitles();
+        else
+            showCryptoDialog(App.getInstance().getTitles());
+    }
 
-        AddCryptoDialog dialog = new AddCryptoDialog(this, new CryptoTitleAdapter(App.getInstance().getTitles(), presenter));
+    public void showCryptoDialog(List<String> titles){
+        AddCryptoDialog dialog = new AddCryptoDialog(this, new CryptoTitleAdapter(titles, presenter));
         dialog.show();
     }
 
     public void showCrypto(RealmResults<CryptoResponse> data) {
         adapter.setData(data);
     }
+
     public CryptoAdapter getCryptoAdapter(){
         return adapter;
     }
@@ -87,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
     public void showProgressbar(){
         progressBar.setVisibility(View.VISIBLE);
     }
+
     public void hideProgressbar(){
         progressBar.setVisibility(View.INVISIBLE);
     }

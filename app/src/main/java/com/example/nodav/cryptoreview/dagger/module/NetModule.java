@@ -1,5 +1,7 @@
 package com.example.nodav.cryptoreview.dagger.module;
 
+import com.example.nodav.cryptoreview.network.ApiService;
+import com.example.nodav.cryptoreview.network.Service;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,6 +36,18 @@ public class NetModule {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(BASE_URL)
                 .build();
+    }
+
+    @Provides
+    @Singleton
+    ApiService provideApiService(Retrofit retrofit){
+        return retrofit.create(ApiService.class);
+    }
+
+    @Provides
+    @Singleton
+    Service provideService(ApiService apiService){
+        return new Service(apiService);
     }
 
 }

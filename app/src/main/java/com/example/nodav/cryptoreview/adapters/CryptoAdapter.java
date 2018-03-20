@@ -90,7 +90,7 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
 
         @OnLongClick(R.id.card_view)
         boolean delete() {
-            presenter.onCryptoDelete(name.getText()+"");
+            presenter.onCryptoDelete(name.getText()+"", getAdapterPosition());
             return true;
         }
     }
