@@ -10,7 +10,8 @@ import retrofit2.http.Path;
 
 
 public interface ApiService {
-    @GET("v1/ticker")
+
+    @GET("v1/ticker?limit=0")
     Observable<List<CryptoResponse>> getCryptos();
 
     @GET("v1/ticker/{id}")

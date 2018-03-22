@@ -26,6 +26,7 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
 
     public CryptoAdapter(Context c, MainActivityPresenter presenter) {
         context = c;
+
         this.presenter = presenter;
 
     }

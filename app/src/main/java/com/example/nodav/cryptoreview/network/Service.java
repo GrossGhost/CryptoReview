@@ -25,13 +25,13 @@ public class Service {
                 .map(CryptoResponse::getId)
                 .toList()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(callback::onSuccess, throwable -> callback.onError());
+                .subscribe(callback::onSuccess, throwable -> callback.onError(new NetworkError(throwable)));
 
     }
 
     public interface GetCryptoTitlesCallback {
         void onSuccess(List<String> titles);
-        void onError();
+        void onError(NetworkError networkError);
     }
 
     public void updateUsersCrypto(String cryptoId, int position, final UpdateCryptoCallback callback) {
@@ -41,13 +41,13 @@ public class Service {
                 .map(cryptoResponses -> cryptoResponses.get(0))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(responseData -> callback.onSuccess(responseData, position),
-                                        throwable -> callback.onError());
+                                        throwable -> callback.onError(new NetworkError(throwable)));
 
     }
 
     public interface UpdateCryptoCallback {
         void onSuccess(CryptoResponse response, int position);
-        void onError();
+        void onError(NetworkError networkError);
     }
 
     public void updateUsersCryptos(List<CryptoResponse> cryptos, UpdateCryptosCallback callback){
@@ -59,11 +59,11 @@ public class Service {
                 .map(cryptoResponses -> cryptoResponses.get(0))
                 .toList()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(callback::onSuccess, throwable -> callback.onError());
+                .subscribe(callback::onSuccess, throwable -> callback.onError(new NetworkError(throwable)));
     }
 
     public interface UpdateCryptosCallback {
         void onSuccess(List<CryptoResponse> response);
-        void onError();
+        void onError(NetworkError networkError);
     }
 }

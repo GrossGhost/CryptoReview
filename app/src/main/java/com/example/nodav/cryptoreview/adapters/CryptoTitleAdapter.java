@@ -77,7 +77,8 @@ public class CryptoTitleAdapter extends RecyclerView.Adapter<CryptoTitleAdapter.
 
     @Override
     public int getItemCount() {
-        return titlesAll.size();
+        int maxItemCount = 50;
+        return Math.min(titlesAll.size(), maxItemCount);
     }
 
 

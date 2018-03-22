@@ -4,6 +4,7 @@ import android.widget.Toast;
 
 import com.example.nodav.cryptoreview.App;
 import com.example.nodav.cryptoreview.model.CryptoResponse;
+import com.example.nodav.cryptoreview.network.NetworkError;
 import com.example.nodav.cryptoreview.network.Service;
 import com.example.nodav.cryptoreview.view.MainActivity;
 
@@ -73,10 +74,10 @@ public class MainActivityPresenter {
         return list;
     }
 
-    private void onErrorResponse(){
+    private void onErrorResponse(int stringId){
         if (view != null) {
             view.hideProgressbar();
-            Toast.makeText(view, "Error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(view, stringId, Toast.LENGTH_SHORT).show();
         }
     }
     private void onResponse(){
@@ -102,8 +103,8 @@ public class MainActivityPresenter {
             }
 
             @Override
-            public void onError() {
-                onErrorResponse();
+            public void onError(NetworkError error) {
+                onErrorResponse(error.getStringErrorId());
             }
         });
     }
@@ -121,8 +122,8 @@ public class MainActivityPresenter {
             }
 
             @Override
-            public void onError() {
-                onErrorResponse();
+            public void onError(NetworkError error) {
+                onErrorResponse(error.getStringErrorId());
             }
         });
     }
@@ -141,8 +142,8 @@ public class MainActivityPresenter {
             }
 
             @Override
-            public void onError() {
-                onErrorResponse();
+            public void onError(NetworkError error) {
+                onErrorResponse(error.getStringErrorId());
             }
         });
     }

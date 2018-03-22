@@ -1,6 +1,7 @@
 package com.example.nodav.cryptoreview;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.example.nodav.cryptoreview.dagger.component.AppComponent;
 
@@ -34,8 +35,6 @@ public class App extends Application {
                 .build();
     }
 
-
-
     public static App getInstance() {
         return instance;
     }
@@ -46,6 +45,7 @@ public class App extends Application {
 
     public List<String> getTitles() {
         return titles;
+
     }
 
     public void setTitles(List<String> titles) {
