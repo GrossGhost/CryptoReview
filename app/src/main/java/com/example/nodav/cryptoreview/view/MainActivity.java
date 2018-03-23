@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.nodav.cryptoreview.App;
 import com.example.nodav.cryptoreview.adapters.CryptoAdapter;
@@ -40,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+    @BindView(R.id.tv_value_numbers)
+    TextView value;
+    @BindView(R.id.tv_change_value)
+    TextView change;
 
     private CryptoAdapter adapter;
 
@@ -52,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         initViews();
+        value.setText("$0.0");
+        change.setText("0%");
     }
 
     private void initViews() {

@@ -25,7 +25,7 @@ class AddCryptoDialog extends Dialog {
 
 
     AddCryptoDialog(@NonNull Context context, CryptoTitleAdapter adapter) {
-        super(context);
+        super(context, R.style.Theme_AppCompat_Dialog);
 
         View view = View.inflate(getContext(), R.layout.dialog_crypto_list, null);
         setContentView(view);

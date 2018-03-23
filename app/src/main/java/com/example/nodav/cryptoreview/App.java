@@ -1,7 +1,6 @@
 package com.example.nodav.cryptoreview;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.example.nodav.cryptoreview.dagger.component.AppComponent;
 
@@ -33,6 +32,7 @@ public class App extends Application {
                 .realmModule(new RealmModule(this))
                 .presenterModule(new PresenterModule())
                 .build();
+
     }
 
     public static App getInstance() {

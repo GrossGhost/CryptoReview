@@ -10,5 +10,8 @@
     <string name="default_error_message">Something went wrong! Please try again.</string>
     <string name="no_connection_error_message">No Internet Connection!</string>
     <string name="ok">OK</string>
+    <string name="total_portfolio_value">Total Portfolio Value</string>
+    <string name="_24hr_change">24hr Change</string>
+    <string name="total_profit">Total Profit</string>
 
 </resources>

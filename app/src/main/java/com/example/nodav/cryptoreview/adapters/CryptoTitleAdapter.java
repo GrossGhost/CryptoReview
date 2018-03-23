@@ -1,5 +1,6 @@
 package com.example.nodav.cryptoreview.adapters;
 
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +27,7 @@ public class CryptoTitleAdapter extends RecyclerView.Adapter<CryptoTitleAdapter.
     private List<String> titlesAllCopy = new ArrayList<>();
     private List<String> titlesUser;
     private MainActivityPresenter presenter;
+    private Resources resources;
 
     public  CryptoTitleAdapter(List<String> titlesAll, MainActivityPresenter presenter){
         this.titlesAll = titlesAll;
@@ -53,6 +55,7 @@ public class CryptoTitleAdapter extends RecyclerView.Adapter<CryptoTitleAdapter.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_title_all, parent, false);
+        resources = parent.getResources();
         return new ViewHolder(view);
     }
 
@@ -66,12 +69,12 @@ public class CryptoTitleAdapter extends RecyclerView.Adapter<CryptoTitleAdapter.
         if (titlesUser.contains(title)){
             holder.checkBox.setChecked(true);
             holder.cardView.setClickable(false);
-            holder.cardView.setCardBackgroundColor(Color.GRAY);
+            holder.cardView.setCardBackgroundColor(resources.getColor(R.color.colorBackground));
 
         }else{
             holder.checkBox.setChecked(false);
             holder.cardView.setClickable(true);
-            holder.cardView.setCardBackgroundColor(Color.WHITE);
+            holder.cardView.setCardBackgroundColor(resources.getColor(R.color.colorCard));
         }
     }
 
@@ -105,7 +108,7 @@ public class CryptoTitleAdapter extends RecyclerView.Adapter<CryptoTitleAdapter.
             checkBox.setChecked(true);
             cardView.setClickable(false);
             titlesUser.add(title.getText()+"");
-            cardView.setCardBackgroundColor(Color.GRAY);
+            cardView.setCardBackgroundColor(resources.getColor(R.color.colorBackground));
         }
     }
 }
