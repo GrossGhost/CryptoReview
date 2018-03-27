@@ -4,8 +4,10 @@ import android.widget.Toast;
 
 import com.example.nodav.cryptoreview.App;
 import com.example.nodav.cryptoreview.model.CryptoResponse;
+import com.example.nodav.cryptoreview.model.UserHoldings;
 import com.example.nodav.cryptoreview.network.NetworkError;
 import com.example.nodav.cryptoreview.network.Service;
+import com.example.nodav.cryptoreview.view.ChangeHoldingDialog;
 import com.example.nodav.cryptoreview.view.MainActivity;
 
 import java.util.ArrayList;
@@ -42,22 +44,28 @@ public class MainActivityPresenter {
 
     public void viewIsReady() {
         RealmResults<CryptoResponse> data = model.where(CryptoResponse.class).findAll();
-        view.showCrypto(data);
+        RealmResults<UserHoldings> holdingsData = model.where(UserHoldings.class).findAll();
+        view.showCrypto(data, holdingsData);
+        countTotalValue();
     }
 
     public void onCryptoDelete(String id, int position){
         model.beginTransaction();
         model.where(CryptoResponse.class).equalTo("id", id).findFirst().deleteFromRealm();
+        model.where(UserHoldings.class).equalTo("id", id).findFirst().deleteFromRealm();
         model.commitTransaction();
         view.getCryptoAdapter().notifyItemRemoved(position);
-
+        countTotalValue();
     }
 
     public void onCryptoAdd(String id, int position){
         CryptoResponse crypto = new CryptoResponse();
         crypto.setId(id);
+        UserHoldings holding = new UserHoldings();
+        holding.setId(id);
         model.beginTransaction();
         model.insert(crypto);
+        model.insert(holding);
         model.commitTransaction();
         view.getCryptoAdapter().notifyItemChanged(position);
 
@@ -119,6 +127,7 @@ public class MainActivityPresenter {
                 model.commitTransaction();
 
                 onResponse(position);
+
             }
 
             @Override
@@ -139,6 +148,7 @@ public class MainActivityPresenter {
                 model.commitTransaction();
 
                 onResponse();
+                countTotalValue();
             }
 
             @Override
@@ -146,6 +156,44 @@ public class MainActivityPresenter {
                 onErrorResponse(error.getStringErrorId());
             }
         });
+    }
+
+    public void onCryptoClick(String id, int position){
+        UserHoldings holding = model.where(UserHoldings.class).contains("id", id).findFirst();
+        ChangeHoldingDialog dialog = new ChangeHoldingDialog(view, id, position, this, holding.getHolding(), holding.getHoldingCount());
+        dialog.show();
+    }
+
+    public void onHoldingChanged(String id, int position, Double holding, Double count){
+        UserHoldings userHoldings = model.where(UserHoldings.class).equalTo("id", id).findFirst();
+
+        model.beginTransaction();
+        userHoldings.setHolding(holding);
+        userHoldings.setHoldingCount(count);
+        model.commitTransaction();
+        view.getCryptoAdapter().notifyItemChanged(position);
+
+        countTotalValue();
+    }
+
+    private void countTotalValue(){
+        double totalValue = 0;
+        double totalChange;
+        double holdingValue = 0;
+        RealmResults<CryptoResponse> data = model.where(CryptoResponse.class).findAll();
+        RealmResults<UserHoldings> holdingsData = model.where(UserHoldings.class).findAll();
+
+        for (CryptoResponse crypto : data){
+            UserHoldings holding = holdingsData.where().contains("id", crypto.getId()).findFirst();
+            if (crypto.getPriceUsd() != null){
+                double price = Double.parseDouble(crypto.getPriceUsd());
+                totalValue += price * holding.getHoldingCount();
+                holdingValue += holding.getHolding() * holding.getHoldingCount();
+            }
+
+        }
+        totalChange = totalValue / holdingValue * 100 - 100;
+        view.updateTotalStats(totalValue, totalChange);
     }
 
 }

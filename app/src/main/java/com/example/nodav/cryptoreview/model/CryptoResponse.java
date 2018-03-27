@@ -1,6 +1,5 @@
 package com.example.nodav.cryptoreview.model;
 
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -164,5 +163,7 @@ public class CryptoResponse extends RealmObject {
     public void setLastUpdated(String lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
+
+
 
 }

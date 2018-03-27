@@ -27,7 +27,7 @@ class AddCryptoDialog extends Dialog {
     AddCryptoDialog(@NonNull Context context, CryptoTitleAdapter adapter) {
         super(context, R.style.Theme_AppCompat_Dialog);
 
-        View view = View.inflate(getContext(), R.layout.dialog_crypto_list, null);
+        View view = View.inflate(context, R.layout.dialog_crypto_list, null);
         setContentView(view);
         ButterKnife.bind(this, view);
 

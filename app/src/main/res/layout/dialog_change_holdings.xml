@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/colorBackground"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_crypto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:layout_marginTop="16dp"
+        android:textAlignment="center"
+        android:text="Crypto" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_new_holding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="24dp"
+        android:hint="@string/holding">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/edit_text_new_holding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number|numberDecimal" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_new_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="24dp"
+        android:hint="@string/count">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/edit_text_new_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number|numberDecimal" />
+    </android.support.design.widget.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="32dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_cancel_holding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:text="@string/cancel" />
+
+        <Button
+            android:id="@+id/button_submit_holding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/ok" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

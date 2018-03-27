@@ -1,6 +1,7 @@
 package com.example.nodav.cryptoreview.adapters;
 
-import android.content.Context;
+import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,10 +11,12 @@ import android.widget.TextView;
 
 import com.example.nodav.cryptoreview.R;
 import com.example.nodav.cryptoreview.model.CryptoResponse;
+import com.example.nodav.cryptoreview.model.UserHoldings;
 import com.example.nodav.cryptoreview.presenter.MainActivityPresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.OnLongClick;
 import io.realm.RealmResults;
 
@@ -21,44 +24,55 @@ import io.realm.RealmResults;
 public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder> {
 
     private RealmResults<CryptoResponse> data;
-    private Context context;
+    private RealmResults<UserHoldings> holdingsData;
     private MainActivityPresenter presenter;
+    private Resources resources;
 
-    public CryptoAdapter(Context c, MainActivityPresenter presenter) {
-        context = c;
 
+    public CryptoAdapter(MainActivityPresenter presenter) {
         this.presenter = presenter;
-
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        resources = parent.getResources();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CryptoResponse item = data.get(position);
-        holder.name.setText(item.getId());
-        holder.price.setText(context.getString(R.string.dollar_price, item.getPriceUsd()));
+        UserHoldings holding = holdingsData.where().contains("id", item.getId()).findFirst();
 
-        holder.changeOneH.setText(item.getPercentChange1h() + "%");
-        if (data.get(position).getPercentChange1h() != null) {
-            if (Double.parseDouble(item.getPercentChange1h()) < 0)
-                holder.changeOneH.setTextColor(context.getResources().getColor(R.color.colorRed));
-            else
-                holder.changeOneH.setTextColor(context.getResources().getColor(R.color.colorGreen));
-        }
+        holder.name.setText(item.getSymbol());
 
+        holder.holding.setText("$" + holding.getHolding());
+        holder.holdingCount.setText(holding.getHoldingCount() + "");
 
-        holder.change24H.setText(item.getPercentChange24h() + "%");
+        holder.price.setText("$" + item.getPriceUsd());
+        holder.priceChange.setText(item.getPercentChange24h() + "%");
         if (item.getPercentChange24h() != null) {
             if (Double.parseDouble(item.getPercentChange24h()) < 0)
-                holder.change24H.setTextColor(context.getResources().getColor(R.color.colorRed));
+                holder.priceChange.setTextColor(resources.getColor(R.color.colorRed));
             else
-                holder.change24H.setTextColor(context.getResources().getColor(R.color.colorGreen));
+                holder.priceChange.setTextColor(resources.getColor(R.color.colorGreen));
         }
+
+        if (item.getPriceUsd() != null) {
+            double price = Double.parseDouble(item.getPriceUsd());
+            holder.profit.setText("$" + String.format("%.2f", holding.getProfit(price)));
+
+            holder.profitPercent.setText(String.format("%.2f", holding.getProfitPercent(price)) + "%");
+            if (holding.getProfitPercent(price) < 0) {
+                holder.profit.setTextColor(resources.getColor(R.color.colorRed));
+                holder.profitPercent.setTextColor(resources.getColor(R.color.colorRed));
+            } else {
+                holder.profit.setTextColor(resources.getColor(R.color.colorGreen));
+                holder.profitPercent.setTextColor(resources.getColor(R.color.colorGreen));
+            }
+        }
+
     }
 
     @Override
@@ -66,9 +80,11 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
         return data.size();
     }
 
-    public void setData(RealmResults<CryptoResponse> data){
+    public void setData(RealmResults<CryptoResponse> data, RealmResults<UserHoldings> holdingsData) {
         this.data = null;
         this.data = data;
+        this.holdingsData = null;
+        this.holdingsData = holdingsData;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -77,21 +93,32 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
         CardView cardView;
         @BindView(R.id.tv_name_coin)
         TextView name;
+        @BindView(R.id.tv_holding)
+        TextView holding;
+        @BindView(R.id.tv_holding_count)
+        TextView holdingCount;
         @BindView(R.id.tv_price)
         TextView price;
-        @BindView(R.id.tv_percent_change_1h)
-        TextView changeOneH;
-        @BindView(R.id.tv_percent_change_24h)
-        TextView change24H;
+        @BindView(R.id.tv_price_change)
+        TextView priceChange;
+        @BindView(R.id.tv_profit)
+        TextView profit;
+        @BindView(R.id.tv_profit_percent)
+        TextView profitPercent;
 
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
 
+        @OnClick(R.id.card_view)
+        void onClick() {
+            presenter.onCryptoClick(data.get(getAdapterPosition()).getId(), getAdapterPosition());
+        }
+
         @OnLongClick(R.id.card_view)
         boolean delete() {
-            presenter.onCryptoDelete(name.getText()+"", getAdapterPosition());
+            presenter.onCryptoDelete(data.get(getAdapterPosition()).getId(), getAdapterPosition());
             return true;
         }
     }

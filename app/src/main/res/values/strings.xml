@@ -13,5 +13,10 @@
     <string name="total_portfolio_value">Total Portfolio Value</string>
     <string name="_24hr_change">24hr Change</string>
     <string name="total_profit">Total Profit</string>
+    <string name="holdings">Holdings</string>
+    <string name="profit">Profit</string>
+    <string name="holding">Holding</string>
+    <string name="count">Count</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

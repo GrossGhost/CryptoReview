@@ -15,6 +15,7 @@ import com.example.nodav.cryptoreview.adapters.CryptoAdapter;
 import com.example.nodav.cryptoreview.R;
 import com.example.nodav.cryptoreview.adapters.CryptoTitleAdapter;
 import com.example.nodav.cryptoreview.model.CryptoResponse;
+import com.example.nodav.cryptoreview.model.UserHoldings;
 import com.example.nodav.cryptoreview.presenter.MainActivityPresenter;
 
 import java.util.List;
@@ -42,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
     @BindView(R.id.tv_value_numbers)
-    TextView value;
+    TextView tvValue;
     @BindView(R.id.tv_change_value)
-    TextView change;
+    TextView tvChange;
 
     private CryptoAdapter adapter;
 
@@ -57,8 +58,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         initViews();
-        value.setText("$0.0");
-        change.setText("0%");
+
     }
 
     private void initViews() {
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             swipeRefreshLayout.setRefreshing(false);
         });
 
-        adapter = new CryptoAdapter(this, presenter);
+        adapter = new CryptoAdapter(presenter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -91,8 +91,17 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void showCrypto(RealmResults<CryptoResponse> data) {
-        adapter.setData(data);
+    public void showCrypto(RealmResults<CryptoResponse> data, RealmResults<UserHoldings> holdingsData) {
+        adapter.setData(data, holdingsData);
+    }
+
+    public void updateTotalStats(Double value, Double change){
+        tvValue.setText("$"+String.format("%.2f", value));
+        tvChange.setText(String.format("%.2f", change)+"%");
+        if (change < 0)
+            tvChange.setTextColor(getResources().getColor(R.color.colorRed));
+        else
+            tvChange.setTextColor(getResources().getColor(R.color.colorGreen));
     }
 
     public CryptoAdapter getCryptoAdapter(){
