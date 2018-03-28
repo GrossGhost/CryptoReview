@@ -35,7 +35,6 @@ public class Service {
 
     public interface GetCryptoTitlesCallback {
         void onSuccess(List<String> titles);
-
         void onError(NetworkError networkError);
     }
 
@@ -53,7 +52,6 @@ public class Service {
 
     public interface UpdateCryptoCallback {
         void onSuccess(CryptoResponse response, int position);
-
         void onError(NetworkError networkError);
     }
 
@@ -89,7 +87,6 @@ public class Service {
 
     public interface UpdateCryptosCallback {
         void onSuccess(List<CryptoResponse> response);
-
         void onError(NetworkError networkError);
     }
 }

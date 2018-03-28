@@ -33,6 +33,7 @@ public class MainActivityPresenter {
         view = usersActivity;
         if (isFirstTimeStartActivity){
             onRefreshData();
+            countTotalValue();
             isFirstTimeStartActivity = false;
         }
     }
@@ -46,7 +47,6 @@ public class MainActivityPresenter {
         RealmResults<CryptoResponse> data = model.where(CryptoResponse.class).findAll();
         RealmResults<UserHoldings> holdingsData = model.where(UserHoldings.class).findAll();
         view.showCrypto(data, holdingsData);
-        countTotalValue();
     }
 
     public void onCryptoDelete(String id, int position){
@@ -54,6 +54,7 @@ public class MainActivityPresenter {
         model.where(CryptoResponse.class).equalTo("id", id).findFirst().deleteFromRealm();
         model.where(UserHoldings.class).equalTo("id", id).findFirst().deleteFromRealm();
         model.commitTransaction();
+
         view.getCryptoAdapter().notifyItemRemoved(position);
         countTotalValue();
     }
@@ -63,6 +64,7 @@ public class MainActivityPresenter {
         crypto.setId(id);
         UserHoldings holding = new UserHoldings();
         holding.setId(id);
+
         model.beginTransaction();
         model.insert(crypto);
         model.insert(holding);
@@ -70,7 +72,6 @@ public class MainActivityPresenter {
         view.getCryptoAdapter().notifyItemChanged(position);
 
         updateUsersCrypto(id, position);
-
     }
 
     public List<String> getUsersCryptoList(){

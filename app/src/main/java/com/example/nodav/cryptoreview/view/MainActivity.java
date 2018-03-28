@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     MainActivityPresenter presenter;
 
-
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.recycler_view_crypto)
@@ -95,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
         adapter.setData(data, holdingsData);
     }
 
-    public void updateTotalStats(Double value, Double change){
-        tvValue.setText("$"+String.format("%.2f", value));
+    public void updateTotalStats(double value, double change){
+        tvValue.setText(getResources().getString(R.string.dollar_price , value));
         tvChange.setText(String.format("%.2f", change)+"%");
         if (change < 0)
             tvChange.setTextColor(getResources().getColor(R.color.colorRed));

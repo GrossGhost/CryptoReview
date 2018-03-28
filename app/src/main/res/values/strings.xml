@@ -4,7 +4,7 @@
     <string name="price">Price</string>
     <string name="_24h">24H</string>
     <string name="_1h">1H</string>
-    <string name="dollar_price">$%1$s</string>
+    <string name="dollar_price">$%.2f</string>
     <string name="percent_numb">%s%</string>
     <string name="your_crypto_list">Your Crypto List</string>
     <string name="default_error_message">Something went wrong! Please try again.</string>

@@ -1,6 +1,5 @@
 package com.example.nodav.cryptoreview.model;
 
-
 import io.realm.RealmObject;
 
 public class UserHoldings extends RealmObject {
@@ -33,6 +32,7 @@ public class UserHoldings extends RealmObject {
     public void setHoldingCount(double holdingCount) {
         this.holdingCount = holdingCount;
     }
+
     public String getPrice() {
         return price;
     }
